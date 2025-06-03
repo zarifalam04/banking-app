@@ -98,6 +98,7 @@ public class Main {
         System.out.println("Enter amount to withdraw: ");
         double amount = Double.parseDouble(scanner.nextLine());
         account.withdraw(amount);
+        System.out.println("✅ Withdrawal successful.");
     }
 
 
