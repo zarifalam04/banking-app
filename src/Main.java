@@ -9,20 +9,42 @@ public class Main {
     // Main method to run program
     public static void main(String[] args) {
         // Opening messages
-        while (true) while (true) {
+        while (true) {
             System.out.println("Welcome to Zee Banking");
             System.out.println("1. Login\n2. Create a new account");
 
             int response = Integer.parseInt(scanner.nextLine());
 
             if (response == 1) {
-                Account account = checkAccount();
-
-                break;
+                Account account = loginAccount();
+                boolean loggedIn = true;
+                while (loggedIn) {
+                    if (account != null) {
+                        System.out.println("\n1. Check Balance\n2. Deposit\n3. Withdraw\n4. Logout");
+                        int choice = Integer.parseInt(scanner.nextLine());
+                        switch (choice) {
+                            case 1:
+                                checkBalance(account);
+                                break;
+                            case 2:
+                                deposit(account);
+                                break;
+                            case 3:
+                                withdraw(account);
+                                break;
+                            case 4:
+                                System.out.println("You have been logged out");
+                                loggedIn = false;
+                                break;
+                        }
+                    } else {
+                        System.out.println("Please enter a valid account or make an account");
+                        break;
+                    }
+                }
 
             } else if (response == 2) {
                 createAccount();
-                break;
             }
         }
     }
@@ -45,21 +67,38 @@ public class Main {
     }
 
     // Method to check if an account is registered
-    public static Account checkAccount() {
+    public static Account loginAccount() {
         System.out.println("Account number: ");
         int accNum = Integer.parseInt(scanner.nextLine());
         System.out.println("Password: ");
         String accPass = scanner.nextLine();
 
-        Account account = accounts.get(accNum);
-        if (account != null && account.checkPassword(accPass)) {
+        Account account = accounts.get(accNum); // Retrieve the account from hashmap
+        if (account != null && account.checkPassword(accPass)) { // If the return value from the hashmap isn't null and the password matches
             System.out.println("✅ Login successful. Welcome, " + account.getAccountHolder());
-            System.out.println("1. Chequing Account\n2. Savings Account ");
-            return account;
+            return account; // Returns the account object back to main method
         } else {
             System.out.println("❌ Login failed. Account not found or wrong password.");
             return null;
         }
     }
+
+    public static void checkBalance(Account account) {
+        System.out.println("Your balance is: $" + account.getAccountBalance());
+    }
+
+    public static void deposit(Account account) {
+        System.out.println("Enter amount to deposit: ");
+        double amount = Double.parseDouble(scanner.nextLine());
+        account.deposit(amount);
+        System.out.println("✅ Deposit successful.");
+    }
+
+    public static void withdraw(Account account) {
+        System.out.println("Enter amount to withdraw: ");
+        double amount = Double.parseDouble(scanner.nextLine());
+        account.withdraw(amount);
+    }
+
 
 }
